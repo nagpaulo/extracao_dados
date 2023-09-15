@@ -3,6 +3,7 @@ import requests
 import os
 import json
 
+#montando url
 TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%S.000Z"
 
 end_time = datetime.now().strftime(TIMESTAMP_FORMAT)
@@ -14,6 +15,7 @@ user_fields = "expansions=author_id&user.fields=id,name,username,created_at"
 
 url_raw = f"https://labdados.com/2/tweets/search/recent?query={query}&{tweet_fields}&{user_fields}&start_time={start_time}&end_time={end_time}"
 
+#montando headers
 bearer_token = os.environ.get("BEARER_TOKEN")
 headers = {"Authorization":"Bearer {}".format(bearer_token)}
 response = requests.request("GET", url_raw, headers=headers)
@@ -21,3 +23,11 @@ response = requests.request("GET", url_raw, headers=headers)
 json_response = response.json()
  
 print(json.dumps(json_response, indent=4, sort_keys=True))
+
+#Paginate
+while "next_token" in json_response.get("meta", {}):
+    next_token = json_response['meta']['next_token']
+    url = f"{url_raw}&next_token={next_token}"
+    response = requests.request("GET", url, headers=headers)
+    json_response = response.json() 
+    print(json.dumps(json_response, indent=4, sort_keys=True))
