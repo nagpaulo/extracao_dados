@@ -4,3 +4,4 @@ airflow_pipeline/operators/__pycache__
 airflow_pipeline/hook/__pycache__
 airflow_pipeline/dags/__pycache__
 airflow_pipeline/operators/__pycache__
+src/notebooks/output
